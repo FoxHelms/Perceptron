@@ -1,0 +1,67 @@
+
+Goal:
+
+Write a perceptron that takes a string (max 100 characters) as input and outputs whether or not it contains my name. 
+
+It should handle any variation of my name: no caps, all caps, full name, first last, first only, an initial
+
+Step 1: Dataset
+
+list of 1000 tuples where index 0 is the string and index 1 is either 1 or 0 (1: contain 0: dn contain)
+
+Step 2: Training division
+
+Train 3 different neural nets. 
+SGD - 500 random inputs, 1000 weight iterations each
+MBGD - 167 random inputs, 3 weight iterations each
+WBGD - 500 random inputs, 1 weight iterations each
+
+Step 3:
+
+Each character of string is converted to a number, which is mapped to the input of its index position. 
+
+
+The perceptron has 100 inputs and 1 bias.
+
+If the sentence is shorter, all remaining characters are 0. 
+
+' ' is 0
+A is 1
+B is 26
+!,.:;?"' are 27,28,29,30,31,32,33,34
+
+Step 4:
+
+Python code that has array of int inputs, randomized weights, a bias b = 1.
+Activation function is sigmoid. 
+
+Three loops:
+
+SGD
+One loop goes through 1000 weight iterations on one datapoint, loop this for 500 datapoints: long time. 
+Loss function is squared error
+
+MBGD
+One loop goes through 167 datapoint iterations and the weights are adjusted 3 times: less time.
+Loss function is mean squared error. 
+
+WBGD
+One loop goes through 500 datapoint iterations and the weights are adjusted once: fastest.
+Loss function is mean squared error. 
+
+This should give three different arrays of weights. 
+
+Each array of weights is tested on 500 testing datapoints (separate from training data)
+
+The average error is computed for each array of weights. 
+
+The array of weights with the lowest error is assumed to be the best one.
+
+
+
+
+
+
+
+
+
