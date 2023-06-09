@@ -3,18 +3,27 @@ Goal:
 
 Write a perceptron that takes a string (max 100 characters) as input and outputs whether or not it contains my name. 
 
-It should handle any variation of my name: no caps, all caps, full name, first last, first only, an initial
+(Done) Step 1: Dataset
 
-Step 1: Dataset
+list of 1000 tuples where 1: contains my name, 0: dn contain
 
-list of 1000 tuples where index 0 is the string and index 1 is either 1 or 0 (1: contain 0: dn contain)
+(Done) Step 2: Convert any string character to an integer. 
 
 Step 2: Training division
 
+What's the best way to import data?
+
+So I have my pile of a bunch of data. 
+The program opens a random string and 
+
+Probably 800 training, 200 testing. 
+
+code goes through and selects tuples for training and tuples for testing.
+
 Train 3 different neural nets. 
-SGD - 500 random inputs, 1000 weight iterations each
-MBGD - 167 random inputs, 3 weight iterations each
-WBGD - 500 random inputs, 1 weight iterations each
+SGD - 800 random inputs, 800 weight iterations each
+MBGD - 266 random inputs, 3 weight iterations each
+WBGD - 800 random inputs, 1 weight iterations each
 
 Step 3:
 
@@ -39,7 +48,7 @@ Three loops:
 
 SGD
 One loop goes through 1000 weight iterations on one datapoint, loop this for 500 datapoints: long time. 
-Loss function is squared error
+Loss function is squared error. 
 
 MBGD
 One loop goes through 167 datapoint iterations and the weights are adjusted 3 times: less time.
@@ -51,9 +60,9 @@ Loss function is mean squared error.
 
 This should give three different arrays of weights. 
 
-Each array of weights is tested on 500 testing datapoints (separate from training data)
+Each array of weights is tested on 500 testing datapoints (separate from training data). 
 
-The average error is computed for each array of weights. 
+The average error is computed for each array of weights.
 
 The array of weights with the lowest error is assumed to be the best one.
 
