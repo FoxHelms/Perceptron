@@ -7,8 +7,8 @@ from stringtoint import strToInt
 
 class Perceptron:
     def __init__(self, learning_rate, epochs) :
-        self.weights = None
-        self.bias = None
+        self.weights = [0] * 100
+        self.bias = 1
         self.learning_rate = learning_rate
         self.epochs = epochs
 
@@ -27,6 +27,28 @@ class Perceptron:
     def predict(self, X):
         z = np.dot(X, self.weights) + self.bias
         return self.activation(z)
+    def fit(self, inputs, labels):
+        for _ in range(self.epochs):
+            numCorrect = 0
+            for input_vector, label in zip(inputs, labels):
+                weighted_sum = p.dot(input_vector, self.weights)
+                activation = p.activation(weighted_sum)
+                guess = activation
+                correctQ = guess - label
+                if correctQ == 0:
+                    numCorrect += 1
+                newWeights = [self.learning_rate * (label - activation) * n for n in input_vector]
+                self.weights = [sum(x) for x in zip(self.weights, newWeights)]
+                self.bias += self.learning_rate * (label - activation)
+                #print(self.weights)
+                #print("Self error: {}".format(error))
+            print("Current epoch: {}".format(_))
+            #print(self.weights)
+            avgError = numCorrect / len(labels)
+            print("Average error: {}".format(avgError))
+        return self.weights
+
+
 
 
 # import data and put into two lists, train and test
@@ -48,22 +70,30 @@ X_train_int = [ss.strToInt(i) for i in X_train]
 X_test_int = [ss.strToInt(i) for i in X_test]
 
 
-### IMPORTANT - You need to decide what activation function to use. 
-# Heaviside doesn't seem to work with your data type. 
 
 
-p = Perceptron(0.001, 100)
-#test_weights = [0] * len(X_train_int)
-test_weights = [r.uniform(-0.99,0.99) for i in range(100)]
-test_dot = p.dot(X_train_int[3], test_weights)
-act = p.activation(test_dot)
-model = p.fit(X_train_int, y_train)
+p = Perceptron(0.01, 1000)
 
-print("Test weighst: {}".format(test_weights))
+new_weights = p.fit(X_train_int,y_train)
 
-print("Test dot is {}".format(test_dot))
+print(new_weights)
+print(p.bias)
 
-print("Activation is: {}".format(act))
+
+usrP = input("Enter a phrase here: ")
+
+usrD = ss.strToInt(usrP)
+
+res = p.predict(usrD)
+
+print(res)
+
+
+#model = p.fit(X_train_int, y_train)
+
+
+
+
 
 
 
