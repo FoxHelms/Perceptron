@@ -2,13 +2,15 @@ import numpy as np
 import perdata
 import random as r
 import stringtoint as ss
+import time as t
+import re
 
 from stringtoint import strToInt
 
 class Perceptron:
     def __init__(self, learning_rate, epochs) :
-        self.weights = None
-        self.bias = None
+        self.weights = [0] * 100
+        self.bias = 1
         self.learning_rate = learning_rate
         self.epochs = epochs
 
@@ -27,6 +29,31 @@ class Perceptron:
     def predict(self, X):
         z = np.dot(X, self.weights) + self.bias
         return self.activation(z)
+    def fit(self, inputs, labels):
+        for _ in range(self.epochs):
+            numCorrect = 0
+            for input_vector, label in zip(inputs, labels):
+                weighted_sum = self.dot(input_vector, self.weights)
+                activation = self.activation(weighted_sum)
+                guess = activation
+                correctQ = guess - label
+                if correctQ == 0:
+                    numCorrect += 1
+                #self.weights = [weight + self.learning_rate * (label - activation) * n for weight, n in zip(self.weights, input_vector)]
+                
+                newWeights = [self.learning_rate * (label - activation) * n for n in input_vector]
+                self.weights = [x+y for x,y in zip(self.weights, newWeights)]
+                self.bias += self.learning_rate * (label - activation)
+                #print(self.weights)
+                #print("Self error: {}".format(error))
+            print("Current epoch: {}".format(_))
+            #print(self.weights)
+            print("number correct: {}".format(numCorrect))
+            avgError = numCorrect / len(labels)
+            print("Average error: {}".format(avgError))
+        return self.weights
+
+
 
 
 # import data and put into two lists, train and test
@@ -35,35 +62,49 @@ allData = perdata.allData
 
 r.shuffle(allData)
 
+
+# Segmenting data
 trainData = allData[:800]
 testData = allData[800:]
 
+#trainData = allData
+
 X_train = [X[0] for X in trainData]
+X_train_lower = [d.lower() for d in X_train]
+X_train_clean = [re.sub('[^A-Za-z0-9]+', ' ', dirty) for dirty in X_train_lower]
 y_train = [X[1] for X in trainData]
 
-X_test = [X[0] for X in testData]
-y_test = [X[1] for X in testData]
+#X_test = [X[0] for X in testData]
+#y_test = [X[1] for X in testData]
 
-X_train_int = [ss.strToInt(i) for i in X_train]
-X_test_int = [ss.strToInt(i) for i in X_test]
-
-
-### IMPORTANT - You need to decide what activation function to use. 
-# Heaviside doesn't seem to work with your data type. 
+X_train_int = [ss.strToInt(i) for i in X_train_lower]
+#X_test_int = [ss.strToInt(i) for i in X_test]
 
 
-p = Perceptron(0.001, 100)
-#test_weights = [0] * len(X_train_int)
-test_weights = [r.uniform(-0.99,0.99) for i in range(100)]
-test_dot = p.dot(X_train_int[3], test_weights)
-act = p.activation(test_dot)
-model = p.fit(X_train_int, y_train)
 
-print("Test weighst: {}".format(test_weights))
 
-print("Test dot is {}".format(test_dot))
+p = Perceptron(0.001, 50)
 
-print("Activation is: {}".format(act))
+new_weights = p.fit(X_train_int,y_train)
+
+print(new_weights)
+print(p.bias)
+
+
+usrP = input("Enter a phrase here: ")
+
+usrD = ss.strToInt(usrP)
+
+res = p.predict(usrD)
+
+print(res)
+
+
+#model = p.fit(X_train_int, y_train)
+
+
+
+
 
 
 
