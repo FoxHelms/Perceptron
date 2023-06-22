@@ -4,7 +4,6 @@ import random as r
 import stringtoint as ss
 import time as t
 import re
-
 from stringtoint import strToInt
 
 class Perceptron:
@@ -15,27 +14,26 @@ class Perceptron:
         self.epochs = epochs
 
     def activation(self,z):
-        return np.heaviside(z,0)
+        return 1/(1 + np.exp(-z))
 
     def dot(self, K, L):
         if len(K) != len(L):
             return 0
         return sum(i[0] * i[1] for i in zip(K, L))
-
-    def fit(self, X, y):
-
-        return #self.weights, self.bias
-
     def predict(self, X):
         z = np.dot(X, self.weights) + self.bias
         return self.activation(z)
     def fit(self, inputs, labels):
         for _ in range(self.epochs):
+            lblz = []
+            gsz = []
             numCorrect = 0
             for input_vector, label in zip(inputs, labels):
                 weighted_sum = self.dot(input_vector, self.weights)
                 activation = self.activation(weighted_sum)
                 guess = activation
+                lblz.append(label)
+                gsz.append(guess)
                 correctQ = guess - label
                 if correctQ == 0:
                     numCorrect += 1
@@ -46,6 +44,12 @@ class Perceptron:
                 self.bias += self.learning_rate * (label - activation)
                 #print(self.weights)
                 #print("Self error: {}".format(error))
+            #print("Labels: {}".format(lblz))
+            #print("Guesses: {}".format(gsz))
+            nets = [lbl - gs for lbl,gs in zip(lblz,gsz)]
+            resBias = sum(nets)
+            print("Pos=False Neg, Neg=False Pos {}".format(resBias))
+            #input("Move along")
             print("Current epoch: {}".format(_))
             #print(self.weights)
             print("number correct: {}".format(numCorrect))
@@ -83,7 +87,7 @@ X_train_int = [ss.strToInt(i) for i in X_train_lower]
 
 
 
-p = Perceptron(0.001, 50)
+p = Perceptron(0.1, 100)
 
 new_weights = p.fit(X_train_int,y_train)
 
