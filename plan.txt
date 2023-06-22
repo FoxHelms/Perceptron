@@ -72,5 +72,10 @@ The array of weights with the lowest error is assumed to be the best one.
 
 
 
+IDK if the problem is:
 
+my data,
+my learning model,
+my activation function,
+not enough layers,
 
