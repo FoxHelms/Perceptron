@@ -72,10 +72,15 @@ The array of weights with the lowest error is assumed to be the best one.
 
 
 
-IDK if the problem is:
+Problem: I'm topping out at 60% accuracy, consistent false negatives. 
 
-my data,
-my learning model,
-my activation function,
-not enough layers,
+
+
+my epochs/learn rate [i tested some extreme values with no notable change],
+not enough data [I added more entries and made it so that dataset is roughly 50/50, which brought accuracy down from 70%]
+my data, [I will try adding more feeatures like # characters, # words, unique word ration, sentiment analysis]
+my learning model, [I will find failure points in the model]
+my activation function, [changed activation function to sigmoid.]
+not enough layers, [Idk how to add a layer lol]
+my accuracy calculator [ I will test it on something known]
 
