@@ -53,9 +53,8 @@ class Perceptron:
             numCorrect = 0
             # combine inputs list and labels list, then iterate through the pairs
             for input_vector, label in zip(inputs, labels):
-                # calculate sum of pieceweise products 
-                # !!! DOES NOT INCLUDE BIAS !!!
-                weighted_sum = self.dot(input_vector, self.weights)
+                # calculate sum of pieceweise products and then add bias
+                weighted_sum = self.dot(input_vector, self.weights) + self.bias
                 # perform sigmoid activation on weighted sum
                 activation = self.activation(weighted_sum)
                 # store this FLOAT in guess variable
@@ -68,15 +67,15 @@ class Perceptron:
                 correctQ = guess - label
                 if abs(correctQ) < 0.30:
                     numCorrect += 1
-                # self.weights = [weight + self.learning_rate * (label - activation) * n for weight, n in zip(self.weights, input_vector)]
-                
-                # create a list where you multiply difference in answer and guess by the input vector and the learning rate.
-                # Idu this algo. WHY ARE WE PUTTING INPUTS INTO THE WEIGHTS ARRAY?!?!?! 
-                newWeights = [self.learning_rate * (label - activation) * n for n in input_vector]
-                # We are adding the new weights to the old weights
-                self.weights = [x+y for x,y in zip(self.weights, newWeights)]
-                # add the learn rate times the difference in answer and guess to the bias
-                self.bias += self.learning_rate * (label - activation)
+                # If there is a large discrepency in between the guess and answer, 
+                # !!!TRY adding mislabeled inputs to a list and then calculating delta once per EPOCH rather than per INPUT !!!
+                elif abs(correctQ) > 0.30:
+                    # calculate delta for weights
+                    newWeights = [self.learning_rate * ((label - activation) / abs(label - activation)) * n for n in input_vector]
+                    # We are adding the new weights to the old weights
+                    self.weights = [x+y for x,y in zip(self.weights, newWeights)]
+                    # add the learn rate times the difference in answer and guess to the bias
+                    self.bias += self.learning_rate * (label - activation)
                 
             # difference between answer and guess
             # pos number means false negative
@@ -88,7 +87,7 @@ class Perceptron:
             print("number correct: {}".format(numCorrect))
             # Calculate and print the num correct guesses divided by the num of labels
             avgError = numCorrect / len(labels)
-            print("Average error: {}".format(avgError))
+            print("Average score: {}".format(avgError))
         # This project returns weights. 
         return self.weights
 
@@ -106,8 +105,8 @@ r.shuffle(allData)
 
 
 # Segmenting data
-trainData = allData[:800]
-testData = allData[800:]
+trainData = allData[:1000]
+testData = allData[1000:]
 
 # training data is list of first item in tuple
 X_train = [X[0] for X in trainData]
